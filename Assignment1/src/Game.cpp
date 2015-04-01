@@ -1,0 +1,65 @@
+#include "Game.h"
+#include <gl_core_4_4.h>
+#include <GLFW\glfw3.h>
+#include <iostream>
+#include "GameStateManager.h"
+#include "SplashState.h"
+#include "Procedural.h"
+#include "TestState.h"
+#include <Windows.h>
+#include <conio.h>
+#include <stdio.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb-master\stb_image.h>
+Game::Game() {
+	currentFrame = 0;
+	deltaTime = 0;
+	lastFrame = 0;
+	
+	if (glfwInit() == false) {
+		printf("Failed to initialise GLFW");
+		return;
+	}
+	m_gameWindow = glfwCreateWindow(1240, 768, "Assignment One - Shane Coates", nullptr, nullptr);
+	if (m_gameWindow == nullptr) {
+		printf("Failed to create Game Window");
+		glfwTerminate();
+		return;
+	}
+	glfwMakeContextCurrent(m_gameWindow);
+	if (ogl_LoadFunctions() == ogl_LOAD_FAILED) {
+		printf("Failed to load OpenGL Functions");
+		glfwDestroyWindow(m_gameWindow);
+		glfwTerminate();
+		return;
+	}
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	m_gameStateManager = new GameStateManager();
+	m_gameStateManager->RegisterState("Splash", new Procedural(m_gameWindow, m_gameStateManager));
+	m_gameStateManager->RegisterState("Test", new TestState(m_gameWindow, m_gameStateManager));
+	m_gameStateManager->Push("Splash");
+}
+Game::~Game() {
+	glfwDestroyWindow(m_gameWindow);
+	glfwTerminate();
+}
+
+void Game::Run() {
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	while (glfwWindowShouldClose(m_gameWindow) == false) {
+		double dt = GetDeltaTime();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_gameStateManager->Update(dt);
+		m_gameStateManager->Draw();
+		glfwSwapBuffers(m_gameWindow);
+		glfwPollEvents();
+	}
+}
+
+double Game::GetDeltaTime(){
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+	return deltaTime;
+}
