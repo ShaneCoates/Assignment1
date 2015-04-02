@@ -7,12 +7,15 @@
 #include "ShaderLoader.h"
 #include "Camera.h"
 Terrain::Terrain() {
+	m_zValue = 0;
+	m_octaves = 10;
+	m_amplitude = 1.0f;
+	m_persistence = 0.3f;
 	ReloadShaders();
-	const char* path[4];
+	const char* path[3];
 	path[0] = "res/textures/terrain/water.jpg";
-	path[1] = "res/textures/terrain/water.jpg";
-	path[2] = "res/textures/terrain/rock.png";
-	path[3] = "res/textures/terrain/grass.jpg";
+	path[1] = "res/textures/terrain/rock.png";
+	path[2] = "res/textures/terrain/grass.jpg";
 	LoadTextures(path);
 	GenerateGrid(20);
 }
@@ -32,7 +35,7 @@ void Terrain::Draw(Camera* _camera) {
 	glUniform1i(loc, 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_3D, m_perlinTexture);
-	for (unsigned int i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 3; i++)
 	{
 		glActiveTexture(GL_TEXTURE1 + i);
 		glBindTexture(GL_TEXTURE_2D, m_terrainTextures[i]);
@@ -43,6 +46,9 @@ void Terrain::Draw(Camera* _camera) {
 	}
 	loc = glGetUniformLocation(m_program, "time");
 	glUniform1f(loc, (float)glfwGetTime());
+
+	loc = glGetUniformLocation(m_program, "zValue");
+	glUniform1f(loc, (float)(m_zValue * 0.01f));
 
 	glBindVertexArray(m_VAO);
 
@@ -100,22 +106,22 @@ void Terrain::GenerateGrid(unsigned int _size) {
 
 	delete[] vertices;
 	delete[] indices;
-	CreateTexture(_size);
+	//CreateTexture(_size);
 }
 void Terrain::CreateTexture(unsigned int _size) {
+	float octaves = m_octaves;
 	float *perlin_data = new float[_size * _size * _size];
 	float scale = (1.0f / _size) * 3;
-	int octaves = 10;
 	for (unsigned int r = 0; r < _size; ++r) {
 		for (unsigned int c = 0; c < _size; ++c) {
 			for (unsigned int d = 0; d < _size; ++d) {
-				float amplidute = 1.f;
-				float persistence = 0.3f;
+				float amplidute = m_amplitude;
+				float persistence = m_persistence;
 				perlin_data[r + _size*c + _size*_size*d] = glm::perlin(glm::vec3(r, c, d) * scale) * 0.5f + 0.5f;
 
 				for (int o = 0; o < octaves; ++o) {
 					float freq = powf(2, (float)o);
-					float perlin_sample = glm::perlin(glm::vec3((float)r, (float)c, (float)d) * scale * freq) * 0.5f + 0.5f;
+					float perlin_sample = glm::perlin(glm::vec3((float)r, (float)c, (float)d + m_seed) * scale * freq) * 0.5f + 0.5f;
 					perlin_data[r + _size*c + _size*_size*d] += perlin_sample * amplidute;
 					amplidute *= persistence;
 				}
@@ -133,8 +139,8 @@ void Terrain::CreateTexture(unsigned int _size) {
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
-void Terrain::LoadTextures(const char* _path[4]) {
-	for (int i = 0; i < 4; i++) {
+void Terrain::LoadTextures(const char* _path[3]) {
+	for (int i = 0; i < 3; i++) {
 		int textureWidth, textureHeight, textureFormat;
 		unsigned char* imageData = stbi_load(_path[i], &textureWidth, &textureHeight, &textureFormat, STBI_default);
 		glGenTextures(1, &m_terrainTextures[i]);
@@ -147,4 +153,12 @@ void Terrain::LoadTextures(const char* _path[4]) {
 
 		stbi_image_free(imageData);
 	}
+}
+void Terrain::NewSeed(int _seed) {
+	m_seed = _seed;
+	CreateTexture(20);
+}
+void Terrain::NewSeed() {
+	m_seed = rand() % 10000;
+	CreateTexture(20);
 }

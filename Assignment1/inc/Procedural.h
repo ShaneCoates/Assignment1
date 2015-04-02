@@ -13,7 +13,7 @@ class ObjectFBX;
 class PerlinParticleEmitter;
 class Skybox;
 class Terrain;
-struct Vertex {
+struct Vertex{ 
 	glm::vec4 Position;
 	glm::vec2 UV;
 };
@@ -42,9 +42,9 @@ private:
 	GameStateManager* m_gameStateManager;
 	FlyCamera* m_camera;
 	ObjectFBX* m_testObject;
-
 	Skybox* m_skybox;
 	Terrain* m_terrain;
+
 
 };
 

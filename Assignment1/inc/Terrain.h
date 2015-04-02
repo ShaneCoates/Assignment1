@@ -20,11 +20,19 @@ public:
 
 	void ReloadShaders();
 
+	void NewSeed(int _seed);
+	void NewSeed();
+
+	float m_zValue;
+	int m_seed;
+	int m_octaves;
+	float m_amplitude;
+	float m_persistence;
 protected:
 private:
 	void GenerateGrid(unsigned int _size);
 	void CreateTexture(unsigned int _size);
-	void LoadTextures(const char* _path[4]);
+	void LoadTextures(const char* _path[3]);
 	
 	unsigned int m_program;
 	unsigned int m_perlinTexture;

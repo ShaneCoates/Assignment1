@@ -8,17 +8,17 @@ out vec3 vTexCoords;
 uniform mat4 ProjectionView;
 uniform sampler3D perlinTexture;
 uniform float time;
-
+uniform float zValue;
 void main() {
-	vTexCoords = vec3(TexCoords, 0);// sin(time) * 0.5f + 0.5f);
+	vTexCoords = vec3(TexCoords, zValue * 0.5f + 0.5f);
 	float height = texture(perlinTexture, vTexCoords).r - 0.5f;
 	if(height < 0.5f) {
 		height = 0.5f;
 	}
 	vec4 pos = Position;
-	pos.x *= 50;
-	pos.z *= 50;
-	pos.y -= 50;
+	pos.x *= 100;
+	pos.z *= 100;
+	pos.y -= 100;
 	//pos.y += vTexCoords.z * 5;
 	pos.y += height * 50;
 	//if(pos.y <= 5) {

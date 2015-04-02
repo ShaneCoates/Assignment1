@@ -9,6 +9,8 @@
 #include <Windows.h>
 #include <conio.h>
 #include <stdio.h>
+#include "imgui.h"
+#include "imgui_impl_glfw_gl3.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb-master\stb_image.h>
 Game::Game() {
@@ -33,6 +35,8 @@ Game::Game() {
 		glfwTerminate();
 		return;
 	}
+	
+	ImGui_ImplGlfwGL3_Init(m_gameWindow, true);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	m_gameStateManager = new GameStateManager();
 	m_gameStateManager->RegisterState("Splash", new Procedural(m_gameWindow, m_gameStateManager));
@@ -42,6 +46,7 @@ Game::Game() {
 Game::~Game() {
 	glfwDestroyWindow(m_gameWindow);
 	glfwTerminate();
+	ImGui_ImplGlfwGL3_Shutdown();
 }
 
 void Game::Run() {
@@ -50,8 +55,16 @@ void Game::Run() {
 	while (glfwWindowShouldClose(m_gameWindow) == false) {
 		double dt = GetDeltaTime();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		ImGui_ImplGlfwGL3_NewFrame();
+		ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+		ImGui::Separator();
+
 		m_gameStateManager->Update(dt);
 		m_gameStateManager->Draw();
+		
+		ImGui::Render();
+		
 		glfwSwapBuffers(m_gameWindow);
 		glfwPollEvents();
 	}
