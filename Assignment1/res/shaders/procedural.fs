@@ -30,23 +30,8 @@ void main() {
 	else{
 		FragColour = levelThree;
 	} 
-	//else if(height >= 0.8f && height < 0.9f) {
-	//	FragColour = mix(levelThree, levelFour, (height - 0.8f) * 10);
-	//}
-	//else {
-	//	FragColour = levelFour;	
-	//}
 	if(height < 1) {
 		FragColour *= height;
 	}
 	FragColour.a = 1;
-
-
-	//FragColour = vec4(1, 1, 1, 1);
-	//if(height <= 1) {
-	//	FragColour.b = height / 5 ;
-	//} else {
-	//	FragColour.g = height / 5 ;
-	//}
-
 }

@@ -128,7 +128,7 @@ void Terrain::CreateTexture(unsigned int _size) {
 
 				for (int o = 0; o < octaves; ++o) {
 					float freq = powf(2, (float)o);
-					float perlin_sample = glm::perlin(glm::vec3((float)r, (float)c, (float)d + m_seed) * scale * freq) * 0.5f + 0.5f;
+					float perlin_sample = glm::perlin(glm::vec4((float)r, (float)c, (float)d, m_seed) * scale * freq) * 0.5f + 0.5f;
 					perlin_data[r + _size*c + _size*_size*d] += perlin_sample * amplidute;
 					amplidute *= persistence;
 				}
