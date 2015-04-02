@@ -9,6 +9,8 @@ uniform mat4 ProjectionView;
 uniform sampler3D perlinTexture;
 uniform float time;
 uniform float zValue;
+uniform float amplitude;
+uniform int size;
 void main() {
 	vTexCoords = vec3(TexCoords, zValue * 0.5f + 0.5f);
 	float height = texture(perlinTexture, vTexCoords).r - 0.5f;
@@ -16,17 +18,11 @@ void main() {
 		height = 0.5f;
 	}
 	vec4 pos = Position;
-	pos.x *= 100;
-	pos.z *= 100;
-	pos.y -= 100;
-	//pos.y += vTexCoords.z * 5;
-	pos.y += height * 50;
-	//if(pos.y <= 5) {
-	//	pos.y = 5;
-	//}
-	//pos.y += TexCoords.x;
-	//pos.y = clamp(pos.y, 0, 1);
-
+	pos.x *= size;
+	pos.z *= size;
+	pos.y -= 10;
+	pos.y += height * amplitude * size;
+	pos.y -= amplitude * size;
 	gl_Position = ProjectionView * pos;
 
 }

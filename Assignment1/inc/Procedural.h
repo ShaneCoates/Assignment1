@@ -7,6 +7,10 @@
 #define	_PROCEDURAL_GENERATION_H_
 #include "GameStateManager.h"
 #include "glm.hpp"
+#include "imgui.h"
+#include "imgui_impl_glfw_gl3.h"
+#define IM_ARRAYSIZE(_ARR)          ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
 struct GLFWwindow;
 class FlyCamera;
 class ObjectFBX;
@@ -45,6 +49,8 @@ private:
 	Skybox* m_skybox;
 	Terrain* m_terrain;
 
+	unsigned int m_seedCount;
+	ImVector<int> m_seeds;
 
 };
 

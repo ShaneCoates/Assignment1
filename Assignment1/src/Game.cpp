@@ -13,7 +13,9 @@
 #include "imgui_impl_glfw_gl3.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb-master\stb_image.h>
+#include <time.h>
 Game::Game() {
+	srand(time(NULL));
 	currentFrame = 0;
 	deltaTime = 0;
 	lastFrame = 0;

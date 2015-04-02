@@ -20,12 +20,13 @@ public:
 
 	void ReloadShaders();
 
-	void NewSeed(int _seed);
+	void NewSeed(unsigned int _seed);
 	void NewSeed();
 
 	float m_zValue;
 	int m_seed;
 	int m_octaves;
+	int m_size;
 	float m_amplitude;
 	float m_persistence;
 protected:

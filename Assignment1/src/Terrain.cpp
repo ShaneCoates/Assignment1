@@ -11,6 +11,7 @@ Terrain::Terrain() {
 	m_octaves = 10;
 	m_amplitude = 1.0f;
 	m_persistence = 0.3f;
+	m_size = 10;
 	ReloadShaders();
 	const char* path[3];
 	path[0] = "res/textures/terrain/water.jpg";
@@ -49,6 +50,12 @@ void Terrain::Draw(Camera* _camera) {
 
 	loc = glGetUniformLocation(m_program, "zValue");
 	glUniform1f(loc, (float)(m_zValue * 0.01f));
+
+	loc = glGetUniformLocation(m_program, "amplitude");
+	glUniform1f(loc, (float)(m_amplitude));
+
+	loc = glGetUniformLocation(m_program, "size");
+	glUniform1i(loc, (m_size));
 
 	glBindVertexArray(m_VAO);
 
@@ -115,7 +122,7 @@ void Terrain::CreateTexture(unsigned int _size) {
 	for (unsigned int r = 0; r < _size; ++r) {
 		for (unsigned int c = 0; c < _size; ++c) {
 			for (unsigned int d = 0; d < _size; ++d) {
-				float amplidute = m_amplitude;
+				float amplidute = 1;
 				float persistence = m_persistence;
 				perlin_data[r + _size*c + _size*_size*d] = glm::perlin(glm::vec3(r, c, d) * scale) * 0.5f + 0.5f;
 
@@ -154,11 +161,11 @@ void Terrain::LoadTextures(const char* _path[3]) {
 		stbi_image_free(imageData);
 	}
 }
-void Terrain::NewSeed(int _seed) {
+void Terrain::NewSeed(unsigned int _seed) {
 	m_seed = _seed;
 	CreateTexture(20);
 }
 void Terrain::NewSeed() {
-	m_seed = rand() % 10000;
+	m_seed = (rand() % 100000);
 	CreateTexture(20);
 }
