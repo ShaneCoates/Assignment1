@@ -45,6 +45,15 @@ void Terrain::Draw(Camera* _camera) {
 		loc = glGetUniformLocation(m_program, formatTex);
 		glUniform1i(loc, i + 1);
 	}
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		glActiveTexture(GL_TEXTURE1 + 3 + i);
+		glBindTexture(GL_TEXTURE_2D, m_normalTextures[i]);
+		char formatTex[32];
+		sprintf(formatTex, "normalTexture[%i]", i);
+		loc = glGetUniformLocation(m_program, formatTex);
+		glUniform1i(loc, i + 1);
+	}
 	loc = glGetUniformLocation(m_program, "time");
 	glUniform1f(loc, (float)glfwGetTime());
 
@@ -116,7 +125,7 @@ void Terrain::GenerateGrid(unsigned int _size) {
 	//CreateTexture(_size);
 }
 void Terrain::CreateTexture(unsigned int _size) {
-	float octaves = m_octaves;
+	int octaves = m_octaves;
 	float *perlin_data = new float[_size * _size * _size];
 	float scale = (1.0f / _size) * 3;
 	for (unsigned int r = 0; r < _size; ++r) {

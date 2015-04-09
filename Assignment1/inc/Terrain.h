@@ -37,7 +37,8 @@ private:
 	
 	unsigned int m_program;
 	unsigned int m_perlinTexture;
-	unsigned int m_terrainTextures[4];
+	unsigned int m_terrainTextures[3];
+	unsigned int m_normalTextures[3];
 	unsigned int m_VAO, m_VBO, m_IBO;
 	unsigned int m_indexCount;
 

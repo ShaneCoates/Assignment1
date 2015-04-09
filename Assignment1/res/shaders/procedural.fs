@@ -6,6 +6,8 @@ out vec4 FragColour;
 
 uniform sampler3D perlinTexture;
 uniform sampler2D terrainTexture[3];
+uniform sampler2D normalTexture[3];
+
 
 
 void main() {
@@ -30,8 +32,8 @@ void main() {
 	else{
 		FragColour = levelThree;
 	} 
-	if(height < 1) {
-		FragColour *= height;
-	}
+	//if(height < 1) {
+	//	FragColour *= height;
+	//}
 	FragColour.a = 1;
 }

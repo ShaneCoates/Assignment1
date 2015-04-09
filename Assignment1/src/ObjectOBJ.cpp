@@ -95,7 +95,7 @@ void ObjectOBJ::LoadFromObj(const char* _path)
 	std::string mtlPath;
 
 	std::ifstream in(_path, std::ios::in);
-	if (!in) { std::cerr << "Cannot open " << _path << std::endl; exit(1); }
+	if (!in) { std::cerr << "Cannot open " << _path << std::endl; }
 
 	std::string line;
 	while (getline(in, line))

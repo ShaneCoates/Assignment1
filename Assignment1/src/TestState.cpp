@@ -28,7 +28,7 @@ void TestState::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	m_fire = new Fire();
 	m_renderTarget = new RenderTarget(m_camera);
 	m_skybox = new Skybox();
-	m_object = new ObjectOBJ("res/models/Dragon/Dragon.obj", ShaderLoader::LoadProgram("res/shaders/simpleOBJ.vs", "res/shaders/simpleOBJ.fs"));
+	//m_object = new ObjectOBJ("res/models/Dragon/Dragon.obj", ShaderLoader::LoadProgram("res/shaders/simpleOBJ.vs", "res/shaders/simpleOBJ.fs"));
 }
 void TestState::Update(double _dt) {
 	m_soundManager->Update(m_camera);
@@ -36,7 +36,7 @@ void TestState::Update(double _dt) {
 		m_soundManager->PlayExistingSound("explosion");
 	}
 	m_camera->Update(_dt);
-	m_object->Update(_dt);
+	//m_object->Update(_dt);
 }
 void TestState::Draw() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
