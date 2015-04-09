@@ -5,6 +5,7 @@
 #ifndef _PARTICLE_EMITTER_H_
 #define _PARTICLE_EMITTER_H_
 #include <glm.hpp>
+class Camera;
 struct Particle
 {
 	Particle() : lifetime(1), lifespan(0) {}
@@ -28,15 +29,14 @@ public:
 				float _startSize, float _endSize, 
 				const glm::vec4& _startColour, const glm::vec4& _endColour);
 
-	void Draw(float _time, const glm::mat4& _cameraTransform, const glm::mat4& _projectionView);
+	void Draw(float _time, Camera* _camera);
 
 	void LoadTexture(const char* _path[2]);
-
+	void CreateUpdateShader();
+	void CreateDrawShader();
 protected:
 
 	void CreateBuffers();
-	void CreateUpdateShader();
-	void CreateDrawShader();
 
 	unsigned int m_texture[2];
 

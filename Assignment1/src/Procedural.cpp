@@ -3,13 +3,13 @@
 #include "ShaderLoader.h"
 #include <gl_core_4_4.h>
 #include "GLFW\glfw3.h"
-#include "PerlinParticleEmitter.h"
 #include <stb-master\stb_image.h>
 #include "Skybox.h"
 #include "aieutilities\Gizmos.h"
 #include "Terrain.h"
 #include <iostream>
 #include <sstream>
+#include "ParticleEmitter.h"
 void Procedural::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	m_window = _window;
 	m_gameStateManager = _gameStateManager;
@@ -22,16 +22,24 @@ void Procedural::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) 
 	m_terrain->NewSeed();
 	m_seedCount = 0;
 	m_seeds.push_back(m_terrain->m_seed);
+	m_emitter = new ParticleEmitter();
+	m_emitter->Init(50000, 50.0f, 100.0f, 1.0f, 5.0f, 0.1f, 0.15f, glm::vec4(1.0f, 1.0f, 1.0f, 0.75f), glm::vec4(1.0f, 1.0f, 1.0f, 0.25f));
+	const char* path[2];
+	path[0] = "res/textures/fire.png";
+	path[1] = "res/textures/smoke.png";
+	m_emitter->LoadTexture(path);
 }
 void Procedural::Update(double _dt) {
 	m_camera->Update(_dt);
 	if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS) {
 		m_terrain->ReloadShaders();
+		m_emitter->CreateDrawShader();
+		m_emitter->CreateUpdateShader();
 	}
 	if (ImGui::CollapsingHeader("Realtime Terrain")) {
 		ImGui::SliderFloat("Z-Value", &m_terrain->m_zValue, -100.0f, 100.0f);
-		ImGui::SliderFloat("Amplitude", &m_terrain->m_amplitude, 0, 3);
-		ImGui::SliderInt("Size", &m_terrain->m_size, 10, 100);
+		ImGui::SliderFloat("Sea Level", &m_terrain->m_amplitude, 0, 2);
+		ImGui::SliderFloat ("Size", &m_terrain->m_size, 0.1, 3);
 	}
 	if (ImGui::CollapsingHeader("Reload Terrain")) {
 		ImGui::SliderInt("Seed", &m_terrain->m_seed, 0, 100000);
@@ -68,10 +76,14 @@ void Procedural::Update(double _dt) {
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
 	}
+	if (ImGui::CollapsingHeader("Light")) {
+		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -10, 10);
+	}
 	//ImGui::ShowTestWindow();
 }
 void Procedural::Draw() {
 	m_skybox->Draw(m_camera);
 	m_terrain->Draw(m_camera);
+	m_emitter->Draw(glfwGetTime(), m_camera);
 	
 }

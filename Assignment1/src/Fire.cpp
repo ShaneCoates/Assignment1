@@ -81,7 +81,7 @@ void Fire::Draw(Camera* _camera) {
 	glViewport(0, 0, 1240, 768);
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	m_emitter->Draw((float)glfwGetTime(), _camera->GetTransform(), _camera->GetProjectionView());
+	m_emitter->Draw((float)glfwGetTime(), m_camera);
 	for (unsigned int i = 0; i < 2; i++)	{
 		DrawToTexture(i);
 	}

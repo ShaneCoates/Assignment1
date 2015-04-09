@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+#include <cmath> 
 #include <gl_core_4_4.h>
 #include <GLFW\glfw3.h>
 #include <glm.hpp>
@@ -11,14 +13,15 @@ Terrain::Terrain() {
 	m_octaves = 10;
 	m_amplitude = 1.0f;
 	m_persistence = 0.3f;
-	m_size = 10;
+	m_size = 1;
+	m_lightHeight = 10;
 	ReloadShaders();
 	const char* path[3];
 	path[0] = "res/textures/terrain/water.jpg";
 	path[1] = "res/textures/terrain/rock.png";
 	path[2] = "res/textures/terrain/grass.jpg";
 	LoadTextures(path);
-	GenerateGrid(20);
+	GenerateGrid(50);
 }
 Terrain::~Terrain(){
 
@@ -32,6 +35,11 @@ void Terrain::Draw(Camera* _camera) {
 	
 	unsigned int loc = glGetUniformLocation(m_program, "ProjectionView");
 	glUniformMatrix4fv(loc, 1, false, glm::value_ptr(_camera->GetProjectionView()));
+	loc = glGetUniformLocation(m_program, "CameraPos");
+	glUniform3fv(loc, 1, glm::value_ptr(_camera->GetPosition()));
+	loc = glGetUniformLocation(m_program, "LightDir");
+	glUniform3fv(loc, 1, glm::value_ptr(glm::normalize(glm::vec3(cosf(glfwGetTime()), m_lightHeight, sinf(glfwGetTime())))));
+
 	loc = glGetUniformLocation(m_program, "perlinTexture");
 	glUniform1i(loc, 0);
 	glActiveTexture(GL_TEXTURE0);
@@ -64,7 +72,7 @@ void Terrain::Draw(Camera* _camera) {
 	glUniform1f(loc, (float)(m_amplitude));
 
 	loc = glGetUniformLocation(m_program, "size");
-	glUniform1i(loc, (m_size));
+	glUniform1f(loc, (m_size));
 
 	glBindVertexArray(m_VAO);
 
@@ -76,12 +84,29 @@ void Terrain::ReloadShaders() {
 void Terrain::GenerateGrid(unsigned int _size) {
 	//Create Vertices
 	TerrainVertex* vertices = new TerrainVertex[_size * _size];
-	for (unsigned int r = 0; r < _size; ++r) {
-		for (unsigned int c = 0; c < _size; ++c) {
-			vertices[r * _size + c].Position = glm::vec4((float)c - (_size * 0.5f), 0, (float)r - (_size * 0.5f), 1);
-			vertices[r * _size + c].UV = glm::vec2((float)c / _size, (float)r / _size);
+	//for (unsigned int r = 0; r < _size; ++r) {
+	//	for (unsigned int c = 0; c < _size; ++c) {
+	//		vertices[r * _size + c].Position = glm::vec4((float)c - (_size * 0.5f), 0, (float)r - (_size * 0.5f), 1);
+	//		vertices[r * _size + c].UV = glm::vec2((float)c / _size, (float)r / _size);
+	//	}
+	//}
+	float const R = 1.0f / (float)(_size - 1);
+	float const S = 1.0f / (float)(_size - 1);
+	for (unsigned int r = 0; r < _size; r++) {
+		for (unsigned int s = 0; s < _size; s++) {
+			float const y = sin(-M_PI_2 + M_PI * r * R);
+			float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
+			float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
+
+			vertices[r * _size + s].Position = glm::vec4(x * _size, y * _size, z * _size, 1);
+			vertices[r * _size + s].UV = glm::vec2(s*S, r*R);
+			vertices[r * _size + s].Normal = glm::vec3(x, y, z);
+
 		}
 	}
+
+
+
 	//Generate Buffers
 	glGenBuffers(1, &m_VBO);
 	glGenBuffers(1, &m_IBO);
@@ -94,10 +119,13 @@ void Terrain::GenerateGrid(unsigned int _size) {
 	glBufferData(GL_ARRAY_BUFFER, (_size * _size) * sizeof(TerrainVertex), vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(TerrainVertex), 0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(TerrainVertex), (void*)(sizeof(glm::vec4)));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(TerrainVertex), (void*)(sizeof(glm::vec4) + (sizeof(glm::vec2))));
 	//Create Indices
-	m_indexCount = (_size - 1) * (_size - 1) * 6;
+	m_indexCount = _size * _size * 6;
 
 	unsigned int* indices = new unsigned int[m_indexCount];
 	unsigned int index = 0;
@@ -106,12 +134,17 @@ void Terrain::GenerateGrid(unsigned int _size) {
 			indices[index++] = r * _size + c;
 			indices[index++] = (r + 1) * _size + c;
 			indices[index++] = (r + 1) * _size + (c + 1);
-
+	
 			indices[index++] = r * _size + c;
 			indices[index++] = (r + 1) * _size + (c + 1);
 			indices[index++] = r * _size + (c + 1);
 		}
 	}
+
+
+
+
+
 	//Bind Indices
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	//Unbind Buffers
@@ -151,9 +184,9 @@ void Terrain::CreateTexture(unsigned int _size) {
 
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 }
 void Terrain::LoadTextures(const char* _path[3]) {
 	for (int i = 0; i < 3; i++) {

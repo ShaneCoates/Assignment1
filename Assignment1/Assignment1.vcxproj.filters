@@ -63,9 +63,6 @@
     <ClCompile Include="src\Procedural.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PerlinParticleEmitter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\Procedural.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\PerlinParticleEmitter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\Terrain.h">

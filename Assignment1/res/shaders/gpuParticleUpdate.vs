@@ -36,47 +36,20 @@ void main()
 
 	position = Position + Velocity * deltaTime;	
 	velocity = Velocity;
-	
-	vec3 targetPosition = emitterPosition;
-	targetPosition.x += tan(time * 5);
-	targetPosition.z += cos(time * 3);
-
-
-	if(position.x > targetPosition.x + 0.1f)
-		velocity.x -= deltaTime;
-	else if(position.x < targetPosition.x - 0.1f)
-		velocity.x += deltaTime;
-	else
-		velocity.x += velocity.x * 5 * -deltaTime;
-
-	if(position.z > targetPosition.z + 0.1f)
-		velocity.z -= deltaTime;
-	else if(position.z < targetPosition.z - 0.1f)
-		velocity.z += deltaTime;
-	else
-		velocity.z += velocity.z * 5 * -deltaTime;
-
-	velocity.y += deltaTime;
-	
 	lifetime = Lifetime + deltaTime;
 	lifespan = Lifespan;
 
 	if(lifetime > lifespan)
 	{
 		velocity.x = rand(seed++, 1) - 0.5f;
-		velocity.y = rand(seed++, 1) - 0.125;
+		velocity.y = rand(seed++, 1) - 0.5f;
 		velocity.z = rand(seed++, 1) - 0.5f;
 
 		position = emitterPosition;
 
-		//float theta = 2 * 3.14 * rand(seed++, 1);
-		//float phi = 3.14 * rand(seed++, 1);
-
-		//position.x = cos(theta) * sin(phi);
-		//position.y = sin(theta) * sin(phi);
-		//position.z = cos(phi);
-		position.x += rand(seed++, 4) - 2;
-		position.z += rand(seed++, 4) - 2;
+		position.x += rand(seed++, 400) - 200;
+		position.z += rand(seed++, 400) - 200;
+		position.y += rand(seed++, 400) - 200;
 
 		lifetime = 0;
 		lifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;// - position.y - velocity.y;

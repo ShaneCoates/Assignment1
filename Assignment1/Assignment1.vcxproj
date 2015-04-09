@@ -96,7 +96,6 @@
     <ClCompile Include="src\ObjectOBJ.cpp" />
     <ClCompile Include="src\ParticleEmitter.cpp" />
     <ClCompile Include="src\Fire.cpp" />
-    <ClCompile Include="src\PerlinParticleEmitter.cpp" />
     <ClCompile Include="src\RenderTarget.cpp" />
     <ClCompile Include="src\ShaderLoader.cpp" />
     <ClCompile Include="src\Procedural.cpp" />
@@ -115,7 +114,6 @@
     <ClInclude Include="inc\ObjectOBJ.h" />
     <ClInclude Include="inc\ParticleEmitter.h" />
     <ClInclude Include="inc\Fire.h" />
-    <ClInclude Include="inc\PerlinParticleEmitter.h" />
     <ClInclude Include="inc\RenderTarget.h" />
     <ClInclude Include="inc\SceneManagement.h" />
     <ClInclude Include="inc\ShaderLoader.h" />
