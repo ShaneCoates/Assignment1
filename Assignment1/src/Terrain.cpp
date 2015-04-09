@@ -14,6 +14,7 @@ Terrain::Terrain() {
 	m_amplitude = 1.0f;
 	m_persistence = 0.3f;
 	m_size = 1;
+	m_lightHeight = 10;
 	ReloadShaders();
 	const char* path[3];
 	path[0] = "res/textures/terrain/water.jpg";
@@ -37,7 +38,7 @@ void Terrain::Draw(Camera* _camera) {
 	loc = glGetUniformLocation(m_program, "CameraPos");
 	glUniform3fv(loc, 1, glm::value_ptr(_camera->GetPosition()));
 	loc = glGetUniformLocation(m_program, "LightDir");
-	glUniform3fv(loc, 1, glm::value_ptr(glm::normalize(glm::vec3(cosf(glfwGetTime()), 1, sinf(glfwGetTime())))));
+	glUniform3fv(loc, 1, glm::value_ptr(glm::normalize(glm::vec3(cosf(glfwGetTime()), m_lightHeight, sinf(glfwGetTime())))));
 
 	loc = glGetUniformLocation(m_program, "perlinTexture");
 	glUniform1i(loc, 0);
@@ -80,10 +81,10 @@ void Terrain::GenerateGrid(unsigned int _size) {
 	//		vertices[r * _size + c].UV = glm::vec2((float)c / _size, (float)r / _size);
 	//	}
 	//}
-	float const R = 1. / (float)(_size - 1);
-	float const S = 1. / (float)(_size - 1);
-	for (int r = 0; r < _size; r++) {
-		for (int s = 0; s < _size; s++) {
+	float const R = 1.0f / (float)(_size - 1);
+	float const S = 1.0f / (float)(_size - 1);
+	for (unsigned int r = 0; r < _size; r++) {
+		for (unsigned int s = 0; s < _size; s++) {
 			float const y = sin(-M_PI_2 + M_PI * r * R);
 			float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
 			float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);

@@ -77,6 +77,9 @@ void Procedural::Update(double _dt) {
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
 	}
+	if (ImGui::CollapsingHeader("Light")) {
+		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -10, 10);
+	}
 	//ImGui::ShowTestWindow();
 }
 void Procedural::Draw() {

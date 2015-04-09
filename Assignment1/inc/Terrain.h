@@ -30,6 +30,7 @@ public:
 	float m_size;
 	float m_amplitude;
 	float m_persistence;
+	float m_lightHeight;
 protected:
 private:
 	void GenerateGrid(unsigned int _size);
