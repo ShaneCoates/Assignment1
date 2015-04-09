@@ -17,6 +17,7 @@ class ObjectFBX;
 class PerlinParticleEmitter;
 class Skybox;
 class Terrain;
+class ParticleEmitter;
 struct Vertex{ 
 	glm::vec4 Position;
 	glm::vec2 UV;
@@ -52,6 +53,7 @@ private:
 	unsigned int m_seedCount;
 	ImVector<int> m_seeds;
 
+	ParticleEmitter* m_emitter;
 };
 
 #endif

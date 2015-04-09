@@ -9,6 +9,7 @@ class Camera;
 struct TerrainVertex {
 	glm::vec4 Position;
 	glm::vec2 UV;
+	glm::vec3 Normal;
 };
 class Terrain {
 public:
@@ -26,7 +27,7 @@ public:
 	float m_zValue;
 	int m_seed;
 	int m_octaves;
-	int m_size;
+	float m_size;
 	float m_amplitude;
 	float m_persistence;
 protected:

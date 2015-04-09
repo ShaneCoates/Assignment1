@@ -33,7 +33,7 @@ void ParticleEmitter::Init(unsigned int _maxParticles, float _minLifeSpan, float
 	CreateUpdateShader();
 	CreateDrawShader();
 }
-void ParticleEmitter::Draw(float _time, const glm::mat4& _cameraTransform, const glm::mat4& _projectionView) {
+void ParticleEmitter::Draw(float _time, Camera* _camera) {
 	glUseProgram(m_updateShader);
 	int loc = glGetUniformLocation(m_updateShader, "time");
 	glUniform1f(loc, _time);
@@ -42,7 +42,7 @@ void ParticleEmitter::Draw(float _time, const glm::mat4& _cameraTransform, const
 	loc = glGetUniformLocation(m_updateShader, "deltaTime");
 	glUniform1f(loc, deltaTime);
 	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
-	glUniform3fv(loc, 1, &m_position[0]);
+	glUniform3fv(loc, 1, glm::value_ptr(_camera->GetPosition()));
 	glEnable(GL_RASTERIZER_DISCARD);
 	glBindVertexArray(m_vao[m_activeBuffer]);
 	unsigned int otherBuffer = (m_activeBuffer + 1) % 2;
@@ -54,17 +54,9 @@ void ParticleEmitter::Draw(float _time, const glm::mat4& _cameraTransform, const
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
 	glUseProgram(m_drawShader);
 	loc = glGetUniformLocation(m_drawShader, "projectionView");
-	glUniformMatrix4fv(loc, 1, false, &_projectionView[0][0]);
+	glUniformMatrix4fv(loc, 1, false, glm::value_ptr(_camera->GetProjectionView()));
 	loc = glGetUniformLocation(m_drawShader, "cameraTransform");
-	glUniformMatrix4fv(loc, 1, false, &_cameraTransform[0][0]);
-	loc = glGetUniformLocation(m_drawShader, "tex1");
-	glUniform1i(loc, 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
-	loc = glGetUniformLocation(m_drawShader, "tex2");
-	glUniform1i(loc, 1);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
+	glUniformMatrix4fv(loc, 1, false, glm::value_ptr(_camera->GetTransform()));
 	glBindVertexArray(m_vao[otherBuffer]);
 	glDrawArrays(GL_POINTS, 0, m_maxParticles);
 	m_activeBuffer = otherBuffer;

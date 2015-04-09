@@ -7,12 +7,12 @@ Skybox::Skybox() {
 	m_program = ShaderLoader::LoadProgram("res/shaders/skybox.vs", "res/shaders/skybox.fs");
 	CreateBuffers();
 	std::vector<const char*> faces;
-	faces.push_back("res/textures/skybox/nightsky/right.jpg");
-	faces.push_back("res/textures/skybox/nightsky/left.jpg");
-	faces.push_back("res/textures/skybox/nightsky/top.jpg");
-	faces.push_back("res/textures/skybox/nightsky/top.jpg");
-	faces.push_back("res/textures/skybox/nightsky/front.jpg");
-	faces.push_back("res/textures/skybox/nightsky/back.jpg");
+	faces.push_back("res/textures/skybox/starfield/right.jpg");
+	faces.push_back("res/textures/skybox/starfield/left.jpg");
+	faces.push_back("res/textures/skybox/starfield/top.jpg");
+	faces.push_back("res/textures/skybox/starfield/left.jpg");
+	faces.push_back("res/textures/skybox/starfield/front.jpg");
+	faces.push_back("res/textures/skybox/starfield/back.jpg");
 	LoadCubemap(faces);
 }
 Skybox::~Skybox() {
