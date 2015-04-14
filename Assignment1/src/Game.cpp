@@ -42,7 +42,7 @@ Game::Game() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	m_gameStateManager = new GameStateManager();
 	m_gameStateManager->RegisterState("Splash", new Procedural(m_gameWindow, m_gameStateManager));
-	m_gameStateManager->RegisterState("Test", new TestState(m_gameWindow, m_gameStateManager));
+	//m_gameStateManager->RegisterState("Test", new TestState(m_gameWindow, m_gameStateManager));
 	m_gameStateManager->Push("Splash");
 }
 Game::~Game() {

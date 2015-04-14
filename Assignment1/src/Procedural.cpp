@@ -10,6 +10,7 @@
 #include <iostream>
 #include <sstream>
 #include "ParticleEmitter.h"
+#include "ObjectOBJ.h"
 void Procedural::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	m_window = _window;
 	m_gameStateManager = _gameStateManager;
@@ -28,18 +29,40 @@ void Procedural::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) 
 	path[0] = "res/textures/fire.png";
 	path[1] = "res/textures/smoke.png";
 	m_emitter->LoadTexture(path);
+
+	unsigned int m_program = ShaderLoader::LoadProgram("res/shaders/simpleOBJ.vs", "res/shaders/simpleOBJ.fs");
+
+	m_ship = new ObjectOBJ("res/models/AlienPlanet.obj", m_program);
+	m_ship->Translate(glm::vec3(10, -20, 120));
+
+	m_ship->SetScale(glm::vec3(4, 4, 4));
 }
 void Procedural::Update(double _dt) {
+	glm::vec3 cameraPos = glm::vec3(sinf((float)glfwGetTime() * 0.1f) * 300, 10, cosf((float)glfwGetTime() * 0.1f) * 300);
+	m_camera->SetLookAt(cameraPos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	m_camera->Update(_dt);
 	if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS) {
 		m_terrain->ReloadShaders();
 		m_emitter->CreateDrawShader();
 		m_emitter->CreateUpdateShader();
 	}
+	GUI();
+	m_ship->m_lightHeight = m_terrain->m_lightHeight;
+	m_ship->Update(_dt);
+	//ImGui::ShowTestWindow();
+}
+void Procedural::Draw() {
+	m_skybox->Draw(m_camera);
+	m_emitter->Draw((float)glfwGetTime(), m_camera);
+	m_ship->Draw(m_camera);
+	m_terrain->Draw(m_camera);
+
+}
+void Procedural::GUI() {
 	if (ImGui::CollapsingHeader("Realtime Terrain")) {
 		ImGui::SliderFloat("Z-Value", &m_terrain->m_zValue, -100.0f, 100.0f);
 		ImGui::SliderFloat("Sea Level", &m_terrain->m_amplitude, 0, 2);
-		ImGui::SliderFloat ("Size", &m_terrain->m_size, 0.1, 3);
+		ImGui::SliderFloat("Size", &m_terrain->m_size, 0.1f, 2);
 	}
 	if (ImGui::CollapsingHeader("Reload Terrain")) {
 		ImGui::SliderInt("Seed", &m_terrain->m_seed, 0, 100000);
@@ -54,7 +77,7 @@ void Procedural::Update(double _dt) {
 			m_terrain->NewSeed();
 			m_seeds.push_back(m_terrain->m_seed);
 		}
-	
+
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildWindowRounding, 5.0f);
 		ImGui::BeginChild("Sub2", ImVec2(0, 300), true);
 		ImGui::Text("Recent Seeds");
@@ -77,13 +100,6 @@ void Procedural::Update(double _dt) {
 		ImGui::PopStyleVar();
 	}
 	if (ImGui::CollapsingHeader("Light")) {
-		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -10, 10);
+		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -2, 2);
 	}
-	//ImGui::ShowTestWindow();
-}
-void Procedural::Draw() {
-	m_skybox->Draw(m_camera);
-	m_terrain->Draw(m_camera);
-	m_emitter->Draw(glfwGetTime(), m_camera);
-	
 }

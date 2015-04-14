@@ -42,7 +42,7 @@ void ParticleEmitter::Draw(float _time, Camera* _camera) {
 	loc = glGetUniformLocation(m_updateShader, "deltaTime");
 	glUniform1f(loc, deltaTime);
 	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
-	glUniform3fv(loc, 1, glm::value_ptr(_camera->GetPosition()));
+	glUniform3fv(loc, 1, glm::value_ptr(glm::vec3(0, 0, 0)));
 	glEnable(GL_RASTERIZER_DISCARD);
 	glBindVertexArray(m_vao[m_activeBuffer]);
 	unsigned int otherBuffer = (m_activeBuffer + 1) % 2;

@@ -13,7 +13,7 @@
 
 struct GLFWwindow;
 class FlyCamera;
-class ObjectFBX;
+class ObjectOBJ;
 class PerlinParticleEmitter;
 class Skybox;
 class Terrain;
@@ -43,10 +43,12 @@ public:
 protected:
 private:
 
+	void GUI();
+
 	GLFWwindow* m_window;
 	GameStateManager* m_gameStateManager;
 	FlyCamera* m_camera;
-	ObjectFBX* m_testObject;
+	ObjectOBJ* m_ship;
 	Skybox* m_skybox;
 	Terrain* m_terrain;
 

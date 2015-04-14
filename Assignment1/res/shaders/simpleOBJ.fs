@@ -6,25 +6,18 @@ in vec3 vertPos;
 in vec2 vTexCoord; 
 
 uniform sampler2D diffuse; 
-uniform vec3 lightPos;
-uniform vec3 ambientColor;
-uniform vec3 diffuseColor; 
-uniform vec3 specColor;
-
+uniform vec3 LightDir;
+uniform vec3 CameraPos;
 out vec4 FragColor;
 
 void main()
 {
-	vec3 normal = normalize(normalInterp);
-	vec3 lightDir = normalize(lightPos - vertPos);
-	float lambertian = max(dot(normal, lightDir), 0.0);
-	float specular = 0.0;
-	if(lambertian > 0.0) 
-	{
-		vec3 viewDir = normalize(-vertPos);
-		vec3 halfDir = normalize(lightDir + viewDir);
-		float specAngle = max(dot(halfDir, normal), 0.0);
-		specular = pow(specAngle, 128.0);
-	}
-	FragColor = texture(diffuse, vTexCoord) * vec4(ambientColor + lambertian * diffuseColor + specular * specColor, 1.0);
+	float d = max(0, dot(normalize(normalInterp.xyz), LightDir));
+	vec3 E = normalize(CameraPos - vertPos.xyz);
+	vec3 R = reflect(-LightDir, normalInterp.xyz);
+	float s = max(0, dot(E, R));
+	s = pow(s, 4);
+
+	FragColor = texture(diffuse, vTexCoord) * vec4(vec3(1, 1, 1) * d + vec3(1, 1, 1) * s,  1);
+	FragColor.a = 1;
 };

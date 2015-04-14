@@ -95,8 +95,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ObjectOBJ.cpp" />
     <ClCompile Include="src\ParticleEmitter.cpp" />
-    <ClCompile Include="src\Fire.cpp" />
-    <ClCompile Include="src\RenderTarget.cpp" />
     <ClCompile Include="src\ShaderLoader.cpp" />
     <ClCompile Include="src\Procedural.cpp" />
     <ClCompile Include="src\Skybox.cpp" />
@@ -113,8 +111,6 @@
     <ClInclude Include="inc\gl_core_4_4.h" />
     <ClInclude Include="inc\ObjectOBJ.h" />
     <ClInclude Include="inc\ParticleEmitter.h" />
-    <ClInclude Include="inc\Fire.h" />
-    <ClInclude Include="inc\RenderTarget.h" />
     <ClInclude Include="inc\SceneManagement.h" />
     <ClInclude Include="inc\ShaderLoader.h" />
     <ClInclude Include="inc\Procedural.h" />

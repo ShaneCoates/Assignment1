@@ -35,13 +35,15 @@ public:
 	glm::vec3 GetPosition();
 	glm::mat4 GetTransform() const			{ return m_MVP; }
 
+	float m_lightHeight;
+
 protected:
 private:
 	struct Vertex
 	{
-		glm::vec4 position;
-		glm::vec3 normal;
-		glm::vec2 texCoord;
+		glm::vec4 position = glm::vec4(0, 0, 0, 0);
+		glm::vec3 normal = glm::vec3(0, 0, 0);
+		glm::vec2 texCoord = glm::vec2(0, 0);
 	};
 
 	unsigned int m_VAO;
@@ -50,10 +52,6 @@ private:
 	unsigned int m_vertexCount;
 	unsigned int m_indexCount;
 	unsigned int m_programID;
-
-	int m_textureWidth;
-	int m_textureHeight;
-	int m_textureFormat;
 
 	unsigned int m_texture;
 
@@ -64,6 +62,8 @@ private:
 	glm::mat4 m_MVP;
 
 	glm::vec3 m_scale;
+
+	
 
 };
 

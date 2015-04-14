@@ -6,8 +6,6 @@
 #include "ShaderLoader.h"
 #include "ParticleEmitter.h"
 #include "SoundManager.h"
-#include "Fire.h"
-#include "RenderTarget.h"
 #include "Skybox.h"
 void TestState::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	m_window = _window;
@@ -25,8 +23,6 @@ void TestState::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	m_camera->SetInputWindow(m_window);
 	m_camera->SetPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 1000.0f);
 	m_camera->SetLookAt(glm::vec3(100, 20, 100), glm::vec3(0), glm::vec3(0, 1, 0));
-	m_fire = new Fire();
-	m_renderTarget = new RenderTarget(m_camera);
 	m_skybox = new Skybox();
 	//m_object = new ObjectOBJ("res/models/Dragon/Dragon.obj", ShaderLoader::LoadProgram("res/shaders/simpleOBJ.vs", "res/shaders/simpleOBJ.fs"));
 }

@@ -14,7 +14,7 @@ Terrain::Terrain() {
 	m_amplitude = 1.0f;
 	m_persistence = 0.3f;
 	m_size = 1;
-	m_lightHeight = 10;
+	m_lightHeight = 1;
 	ReloadShaders();
 	const char* path[3];
 	path[0] = "res/textures/terrain/water.jpg";
@@ -38,7 +38,7 @@ void Terrain::Draw(Camera* _camera) {
 	loc = glGetUniformLocation(m_program, "CameraPos");
 	glUniform3fv(loc, 1, glm::value_ptr(_camera->GetPosition()));
 	loc = glGetUniformLocation(m_program, "LightDir");
-	glUniform3fv(loc, 1, glm::value_ptr(glm::normalize(glm::vec3(cosf(glfwGetTime()), m_lightHeight, sinf(glfwGetTime())))));
+	glUniform3fv(loc, 1, glm::value_ptr(glm::normalize(glm::vec3(sinf(glfwGetTime() * 0.1f), m_lightHeight, cosf(glfwGetTime() * 0.1f) + 1))));
 
 	loc = glGetUniformLocation(m_program, "perlinTexture");
 	glUniform1i(loc, 0);

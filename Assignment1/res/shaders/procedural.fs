@@ -14,11 +14,12 @@ uniform float time;
 uniform vec3 CameraPos;
 uniform vec3 LightDir;
 uniform float amplitude;
+uniform float size;
 void main() {
 	float height = texture(perlinTexture, vTexCoords).r - (0.5f * amplitude);
 	height += texture(perlinTexture, vec3(vTexCoords.x, vTexCoords.y, sin(time * 0.1f))).r - (0.5f * amplitude);
 	height *= 0.5f;
-	vec2 texcoords = vec2(vTexCoords.x * 40, vTexCoords.y * 40);
+	vec2 texcoords = vec2(vTexCoords.x * 20 *  size, vTexCoords.y * 20 * size);
 
 	vec4 levelOne = texture(terrainTexture[0], texcoords);
 	vec4 levelTwo = texture(terrainTexture[1], texcoords);
