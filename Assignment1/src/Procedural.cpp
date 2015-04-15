@@ -79,6 +79,8 @@ void Procedural::Draw() {
 	m_terrain->Draw(m_activeCamera);
 }
 void Procedural::GUI() {
+	ImGui::Checkbox("Free Camera", &m_freeCam);
+	ImGui::Separator();
 	if (ImGui::CollapsingHeader("Light")) {
 		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -2, 2);
 	}
@@ -121,6 +123,5 @@ void Procedural::GUI() {
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
 	}
-	ImGui::Checkbox("Free Camera", &m_freeCam);
 
 }

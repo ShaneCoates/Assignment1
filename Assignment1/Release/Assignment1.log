@@ -1,0 +1,30 @@
+﻿Build started 4/15/2015 10:53:53 PM.
+     1>Project "D:\Programming\Git\Assignment1\Assignment1\Assignment1\Assignment1.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"D:\Programming\Git\Assignment1\Assignment1\Assignment1\dep\stb-master" /ID:\Programming\Git\Assignment1\Assignment1\Assignment1\dep\glm /ID:\Programming\Git\Assignment1\Assignment1\Assignment1\dep\glfw\include /ID:\Programming\Git\Assignment1\Assignment1\Assignment1\dep\AntTweakBar /ID:\Programming\Git\Assignment1\Assignment1\Assignment1\src /ID:\Programming\Git\Assignment1\Assignment1\Assignment1\dep /ID:\Programming\Git\Assignment1\Assignment1\Assignment1\inc /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D _CONSOLE /D _LIB /D GLM_SWIZZLE /D GLM_FORCE_PURE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt src\Procedural.cpp
+         Procedural.cpp
+       Link:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Programming\Git\Assignment1\Assignment1\Release\Assignment1.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\Programming\Git\Assignment1\Assignment1\Assignment1\lib opengl32.lib glfw3.lib XINPUT9_1_0.LIB AntTweakBar.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Programming\Git\Assignment1\Assignment1\Release\Assignment1.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Programming\Git\Assignment1\Assignment1\Release\Assignment1.lib" /MACHINE:X86 /SAFESEH Release\Camera.obj
+         Release\FlyCamera.obj
+         Release\Game.obj
+         Release\GameStateManager.obj
+         Release\Gizmos.obj
+         Release\gl_core_4_4.obj
+         Release\imgui.obj
+         Release\imgui_impl_glfw_gl3.obj
+         Release\main.obj
+         Release\ObjectOBJ.obj
+         Release\ParticleEmitter.obj
+         Release\ShaderLoader.obj
+         Release\Procedural.obj
+         Release\Skybox.obj
+         Release\SpinningCamera.obj
+         Release\Terrain.obj
+         Generating code
+         Finished generating code
+         Assignment1.vcxproj -> D:\Programming\Git\Assignment1\Assignment1\Release\Assignment1.exe
+     1>Done Building Project "D:\Programming\Git\Assignment1\Assignment1\Assignment1\Assignment1.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:09.54
