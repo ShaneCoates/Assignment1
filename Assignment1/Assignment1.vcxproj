@@ -53,14 +53,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;GLM_SWIZZLE;GLM_FORCE_PURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)dep\stb-master;$(ProjectDir)dep\glm;$(ProjectDir)dep\glfw\include;$(ProjectDir)dep\AntTweakBar;$(ProjectDir)src;$(ProjectDir)dep;$(ProjectDir)inc;$(ProjectDir)dep\irrKlang;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)dep\stb-master;$(ProjectDir)dep\glm;$(ProjectDir)dep\glfw\include;$(ProjectDir)dep\AntTweakBar;$(ProjectDir)src;$(ProjectDir)dep;$(ProjectDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;XINPUT9_1_0.LIB;AntTweakBar.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;XINPUT9_1_0.LIB;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,7 +98,6 @@
     <ClCompile Include="src\ShaderLoader.cpp" />
     <ClCompile Include="src\Procedural.cpp" />
     <ClCompile Include="src\Skybox.cpp" />
-    <ClCompile Include="src\SoundManager.cpp" />
     <ClCompile Include="src\SplashState.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestState.cpp" />
@@ -115,7 +114,6 @@
     <ClInclude Include="inc\ShaderLoader.h" />
     <ClInclude Include="inc\Procedural.h" />
     <ClInclude Include="inc\Skybox.h" />
-    <ClInclude Include="inc\SoundManager.h" />
     <ClInclude Include="inc\SplashState.h" />
     <ClInclude Include="inc\stb_rect_pack.h" />
     <ClInclude Include="inc\stb_textedit.h" />

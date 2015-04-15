@@ -16,10 +16,15 @@ uniform vec3 LightDir;
 uniform float amplitude;
 uniform float size;
 void main() {
-	float height = texture(perlinTexture, vTexCoords).r - (0.5f * amplitude);
-	height += texture(perlinTexture, vec3(vTexCoords.x, vTexCoords.y, sin(time * 0.1f))).r - (0.5f * amplitude);
-	height *= 0.5f;
-	vec2 texcoords = vec2(vTexCoords.x * 20 *  size, vTexCoords.y * 20 * size);
+	vec3 pos = vec3(vPosition);
+	pos.x *= (0.5f + 0.5f) / (50 * size);
+	pos.y *= (0.5f + 0.5f) / (50 * size);
+	pos.z *= (0.5f + 0.5f) / (50 * size);
+	
+	float height = texture(perlinTexture, pos).r;
+	height -= amplitude * 0.1f + 0.5f;
+	
+	vec2 texcoords = vec2(vTexCoords.x * 20 * size, vTexCoords.y * 20 * size);
 
 	vec4 levelOne = texture(terrainTexture[0], texcoords);
 	vec4 levelTwo = texture(terrainTexture[1], texcoords);

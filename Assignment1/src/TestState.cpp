@@ -5,7 +5,6 @@
 #include "ObjectOBJ.h"
 #include "ShaderLoader.h"
 #include "ParticleEmitter.h"
-#include "SoundManager.h"
 #include "Skybox.h"
 void TestState::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	m_window = _window;
@@ -17,8 +16,6 @@ void TestState::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	path[0] = "res/textures/fire.png";
 	path[1] = "res/textures/smoke.png";
 	m_emitter->LoadTexture(path);
-	m_soundManager = new SoundManager();
-	m_soundManager->AddSound("res/sounds/explosion.wav", "explosion");
 	m_camera = new FlyCamera(10.0f);
 	m_camera->SetInputWindow(m_window);
 	m_camera->SetPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 1000.0f);
@@ -27,10 +24,6 @@ void TestState::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	//m_object = new ObjectOBJ("res/models/Dragon/Dragon.obj", ShaderLoader::LoadProgram("res/shaders/simpleOBJ.vs", "res/shaders/simpleOBJ.fs"));
 }
 void TestState::Update(double _dt) {
-	m_soundManager->Update(m_camera);
-	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS) {
-		m_soundManager->PlayExistingSound("explosion");
-	}
 	m_camera->Update(_dt);
 	//m_object->Update(_dt);
 }

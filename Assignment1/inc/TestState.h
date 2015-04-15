@@ -12,10 +12,7 @@ class FlyCamera;
 class FollowCamera;
 class ObjectOBJ;
 class ParticleEmitter;
-class SoundManager;
 class DebugGUI;
-class Fire;
-class RenderTarget;
 class Skybox;
 class TestState : public IGameState
 {
@@ -45,12 +42,8 @@ private:
 
 	ParticleEmitter* m_emitter;
 
-	SoundManager* m_soundManager;
-
 	DebugGUI* m_debugGUI;
 
-	Fire* m_fire;
-	RenderTarget* m_renderTarget;
 	Skybox* m_skybox;
 	ObjectOBJ* m_object;
 };

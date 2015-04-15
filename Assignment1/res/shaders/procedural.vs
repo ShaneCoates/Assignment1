@@ -18,14 +18,14 @@ void main() {
 	vec2 tex = TexCoords;
 
 	vTexCoords = vec3(tex, zValue * 0.5f + 0.5f);
-
+	//vTexCoords = vec3(Position.x, Position.y, Position.z);
 	float height = texture(perlinTexture, vTexCoords).r - (0.5f + amplitude);
 
 	vec4 pos = Position;
 	pos.x *= size;
 	pos.z *= size;
 	pos.y *= size;
-	pos += vec4(vNormal, 1) * (1 - height ) * 0.01f;
+	//pos += vec4(vNormal, 1) * (1 - height ) * 0.01f;
 	vPosition = pos;
 	gl_Position = ProjectionView * vPosition;
 	vNormal = Normal;

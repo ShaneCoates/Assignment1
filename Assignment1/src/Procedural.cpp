@@ -59,6 +59,9 @@ void Procedural::Draw() {
 
 }
 void Procedural::GUI() {
+	if (ImGui::CollapsingHeader("Light")) {
+		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -2, 2);
+	}
 	if (ImGui::CollapsingHeader("Realtime Terrain")) {
 		ImGui::SliderFloat("Z-Value", &m_terrain->m_zValue, -100.0f, 100.0f);
 		ImGui::SliderFloat("Sea Level", &m_terrain->m_amplitude, 0, 2);
@@ -99,7 +102,5 @@ void Procedural::GUI() {
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
 	}
-	if (ImGui::CollapsingHeader("Light")) {
-		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -2, 2);
-	}
+
 }
