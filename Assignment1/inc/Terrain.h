@@ -24,7 +24,6 @@ public:
 	void NewSeed(unsigned int _seed);
 	void NewSeed();
 
-	float m_zValue;
 	int m_seed;
 	int m_octaves;
 	float m_size;

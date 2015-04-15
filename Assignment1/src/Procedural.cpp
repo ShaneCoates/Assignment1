@@ -1,5 +1,6 @@
 #include "Procedural.h"
 #include "FlyCamera.h"
+#include "SpinningCamera.h"
 #include "ShaderLoader.h"
 #include <gl_core_4_4.h>
 #include "GLFW\glfw3.h"
@@ -14,10 +15,13 @@
 void Procedural::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) {
 	m_window = _window;
 	m_gameStateManager = _gameStateManager;
-	m_camera = new FlyCamera(100.0f);
-	m_camera->SetInputWindow(m_window);
-	m_camera->SetPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 10000.0f);
-	m_camera->SetLookAt(glm::vec3(10, 10, 10), glm::vec3(0), glm::vec3(0, 1, 0));
+	m_freeCamera = new FlyCamera(100.0f);
+	m_freeCamera->SetInputWindow(m_window);
+	m_freeCamera->SetPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 10000.0f);
+	m_freeCamera->SetLookAt(glm::vec3(300, 100, 300), glm::vec3(0), glm::vec3(0, 1, 0));
+	m_spinCamera = new SpinningCamera(100.0f);
+	m_spinCamera->SetPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 10000.0f);
+	m_activeCamera = m_spinCamera;
 	m_skybox = new Skybox();
 	m_terrain = new Terrain();
 	m_terrain->NewSeed();
@@ -26,44 +30,49 @@ void Procedural::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) 
 	m_emitter = new ParticleEmitter();
 	m_emitter->Init(50000, 50.0f, 100.0f, 1.0f, 5.0f, 0.1f, 0.15f, glm::vec4(1.0f, 1.0f, 1.0f, 0.75f), glm::vec4(1.0f, 1.0f, 1.0f, 0.25f));
 	const char* path[2];
-	path[0] = "res/textures/fire.png";
-	path[1] = "res/textures/smoke.png";
+	path[0] = "res/textures/circle.png";
+	path[1] = "res/textures/star.png";
 	m_emitter->LoadTexture(path);
-
 	unsigned int m_program = ShaderLoader::LoadProgram("res/shaders/simpleOBJ.vs", "res/shaders/simpleOBJ.fs");
-
-	m_ship = new ObjectOBJ("res/models/AlienPlanet.obj", m_program);
-	m_ship->Translate(glm::vec3(10, -20, 120));
-
-	m_ship->SetScale(glm::vec3(4, 4, 4));
+	m_planet1 = new ObjectOBJ("res/models/AlienPlanet.obj", m_program);
+	m_planet1->Translate(glm::vec3(10, 50, 120));
+	m_planet1->SetScale(glm::vec3(8, 8, 8));
+	m_planet2 = new ObjectOBJ("res/models/AlienPlanet2.obj", m_program);
+	m_planet2->Translate(glm::vec3(150, -30, 20));
+	m_planet2->SetScale(glm::vec3(4, 4, 4));
+	m_freeCam = false;
 }
 void Procedural::Update(double _dt) {
-	glm::vec3 cameraPos = glm::vec3(sinf((float)glfwGetTime() * 0.1f) * 300, 10, cosf((float)glfwGetTime() * 0.1f) * 300);
-	m_camera->SetLookAt(cameraPos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	m_camera->Update(_dt);
+	if (m_freeCam) {
+		m_activeCamera = m_freeCamera;
+	} else {
+		m_activeCamera = m_spinCamera;
+	}
+
+	m_activeCamera->Update(_dt);
 	if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS) {
 		m_terrain->ReloadShaders();
 		m_emitter->CreateDrawShader();
-		m_emitter->CreateUpdateShader();
+		m_emitter->CreateUpdateShader("res/shaders/gpuParticleUpdate.vs");
 	}
 	GUI();
-	m_ship->m_lightHeight = m_terrain->m_lightHeight;
-	m_ship->Update(_dt);
-	//ImGui::ShowTestWindow();
+	m_planet1->m_lightHeight = m_terrain->m_lightHeight;
+	m_planet2->m_lightHeight = m_terrain->m_lightHeight;
+	m_planet1->Update(_dt);
+	m_planet2->Update(_dt);
 }
 void Procedural::Draw() {
-	m_skybox->Draw(m_camera);
-	m_emitter->Draw((float)glfwGetTime(), m_camera);
-	m_ship->Draw(m_camera);
-	m_terrain->Draw(m_camera);
-
+	m_skybox->Draw(m_activeCamera);
+	m_emitter->Draw((float)glfwGetTime(), m_activeCamera);
+	m_planet1->Draw(m_activeCamera);
+	m_planet2->Draw(m_activeCamera);
+	m_terrain->Draw(m_activeCamera);
 }
 void Procedural::GUI() {
 	if (ImGui::CollapsingHeader("Light")) {
 		ImGui::SliderFloat("Height", &m_terrain->m_lightHeight, -2, 2);
 	}
 	if (ImGui::CollapsingHeader("Realtime Terrain")) {
-		ImGui::SliderFloat("Z-Value", &m_terrain->m_zValue, -100.0f, 100.0f);
 		ImGui::SliderFloat("Sea Level", &m_terrain->m_amplitude, 0, 2);
 		ImGui::SliderFloat("Size", &m_terrain->m_size, 0.1f, 2);
 	}
@@ -87,9 +96,9 @@ void Procedural::GUI() {
 		ImGui::Columns(3);
 		for (unsigned int i = 0; i < m_seeds.size(); i++)
 		{
-			if (i == 5) {
+			if (i > 0)
 				ImGui::NextColumn();
-			}
+
 			std::stringstream temp_str;
 			temp_str << (m_seeds[i]);
 			std::string str = temp_str.str();
@@ -102,5 +111,6 @@ void Procedural::GUI() {
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
 	}
+	ImGui::Checkbox("Free Camera", &m_freeCam);
 
 }

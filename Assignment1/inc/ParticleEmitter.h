@@ -32,7 +32,7 @@ public:
 	void Draw(float _time, Camera* _camera);
 
 	void LoadTexture(const char* _path[2]);
-	void CreateUpdateShader();
+	void CreateUpdateShader(const char* _path);
 	void CreateDrawShader();
 protected:
 

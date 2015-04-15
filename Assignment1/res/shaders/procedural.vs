@@ -11,18 +11,22 @@ out vec3 vNormal;
 uniform mat4 ProjectionView;
 uniform sampler3D perlinTexture;
 uniform float time;
-uniform float zValue;
 uniform float amplitude;
 uniform float size;
 void main() {
 	vec2 tex = TexCoords;
 
-	vTexCoords = vec3(tex, zValue * 0.5f + 0.5f);
-	//vTexCoords = vec3(Position.x, Position.y, Position.z);
-	float height = texture(perlinTexture, vTexCoords).r - (0.5f + amplitude);
+	vTexCoords = vec3(tex, 0);
+	
+	vec3 pos3d = vec3(Position);
+	pos3d.x /= (50 * size);
+	pos3d.y /= (50 * size);
+	pos3d.z /= (50 * size);
+	
+	float height = texture(perlinTexture, pos3d).r;
 
 	vec4 pos = Position;
-	pos.x *= size;
+	pos.x *= size; 
 	pos.z *= size;
 	pos.y *= size;
 	//pos += vec4(vNormal, 1) * (1 - height ) * 0.01f;

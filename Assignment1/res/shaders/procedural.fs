@@ -17,12 +17,12 @@ uniform float amplitude;
 uniform float size;
 void main() {
 	vec3 pos = vec3(vPosition);
-	pos.x *= (0.5f + 0.5f) / (50 * size);
-	pos.y *= (0.5f + 0.5f) / (50 * size);
-	pos.z *= (0.5f + 0.5f) / (50 * size);
+	pos.x /= (50 * size);
+	pos.y /= (50 * size);
+	pos.z /= (50 * size);
 	
 	float height = texture(perlinTexture, pos).r;
-	height -= amplitude * 0.1f + 0.5f;
+	height -= amplitude * 0.5f;
 	
 	vec2 texcoords = vec2(vTexCoords.x * 20 * size, vTexCoords.y * 20 * size);
 
@@ -48,7 +48,7 @@ void main() {
 	vec3 E = normalize(CameraPos - vPosition.xyz);
 	vec3 R = reflect(-LightDir, vNormal.xyz);
 	float s = max(0, dot(E, R));
-	s = pow(s, height * 8);
+	s = pow(s, 8);
 
 
 	FragColour = FragColour * vec4(vec3(1, 1, 1) * d + vec3(1, 1, 1) * s,  1);

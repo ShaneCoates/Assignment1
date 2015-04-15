@@ -13,6 +13,8 @@
 
 struct GLFWwindow;
 class FlyCamera;
+class Camera;
+class SpinningCamera;
 class ObjectOBJ;
 class PerlinParticleEmitter;
 class Skybox;
@@ -47,8 +49,12 @@ private:
 
 	GLFWwindow* m_window;
 	GameStateManager* m_gameStateManager;
-	FlyCamera* m_camera;
-	ObjectOBJ* m_ship;
+	FlyCamera* m_freeCamera;
+	SpinningCamera* m_spinCamera;
+	Camera* m_activeCamera;
+	ObjectOBJ* m_planet1;
+	ObjectOBJ* m_planet2;
+
 	Skybox* m_skybox;
 	Terrain* m_terrain;
 
@@ -56,6 +62,8 @@ private:
 	ImVector<int> m_seeds;
 
 	ParticleEmitter* m_emitter;
+
+	bool m_freeCam;
 };
 
 #endif

@@ -30,7 +30,7 @@ void ParticleEmitter::Init(unsigned int _maxParticles, float _minLifeSpan, float
 	m_particles = new Particle[_maxParticles];
 	m_activeBuffer = 0;
 	CreateBuffers();
-	CreateUpdateShader();
+	CreateUpdateShader("res/shaders/gpuParticleUpdate.vs");
 	CreateDrawShader();
 }
 void ParticleEmitter::Draw(float _time, Camera* _camera) {
@@ -53,6 +53,16 @@ void ParticleEmitter::Draw(float _time, Camera* _camera) {
 	glDisable(GL_RASTERIZER_DISCARD);
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
 	glUseProgram(m_drawShader);
+
+	loc = glGetUniformLocation(m_drawShader, "startTexture");
+	glUniform1i(loc, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
+	loc = glGetUniformLocation(m_drawShader, "endTexture");
+	glUniform1i(loc, 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
+
 	loc = glGetUniformLocation(m_drawShader, "projectionView");
 	glUniformMatrix4fv(loc, 1, false, glm::value_ptr(_camera->GetProjectionView()));
 	loc = glGetUniformLocation(m_drawShader, "cameraTransform");
@@ -123,7 +133,8 @@ void ParticleEmitter::CreateDrawShader() {
 	loc = glGetUniformLocation(m_drawShader, "colourEnd");
 	glUniform4fv(loc, 1, &m_endColour[0]);
 }
-void ParticleEmitter::CreateUpdateShader() {
+void ParticleEmitter::CreateUpdateShader(const char* _path) {
+	unsigned int vs = ShaderLoader::LoadShader(_path, GL_VERTEX_SHADER);
 	unsigned int vs = ShaderLoader::LoadShader("res/shaders/gpuParticleUpdate.vs", GL_VERTEX_SHADER);
 	m_updateShader = glCreateProgram();
 	glAttachShader(m_updateShader, vs);

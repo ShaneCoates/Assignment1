@@ -98,6 +98,7 @@
     <ClCompile Include="src\ShaderLoader.cpp" />
     <ClCompile Include="src\Procedural.cpp" />
     <ClCompile Include="src\Skybox.cpp" />
+    <ClCompile Include="src\SpinningCamera.cpp" />
     <ClCompile Include="src\SplashState.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestState.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="inc\ShaderLoader.h" />
     <ClInclude Include="inc\Procedural.h" />
     <ClInclude Include="inc\Skybox.h" />
+    <ClInclude Include="inc\SpinningCamera.h" />
     <ClInclude Include="inc\SplashState.h" />
     <ClInclude Include="inc\stb_rect_pack.h" />
     <ClInclude Include="inc\stb_textedit.h" />

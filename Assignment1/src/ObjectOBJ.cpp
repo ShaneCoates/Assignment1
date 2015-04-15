@@ -56,13 +56,13 @@ void ObjectOBJ::Draw(Camera* _camera)
 	
 	glUniformMatrix4fv(projectionUniform, 1, false, glm::value_ptr(_camera->GetProjectionView()));
 	glUniformMatrix4fv(modelUniform, 1, false, glm::value_ptr(m_MVP));
-	glUniform1i(diffuse, 0);
+	glUniform1i(diffuse, 3);
 	glUniform3fv(ambientColorUniform, 1, glm::value_ptr(ambientColor));
 	glUniform3fv(diffuseColorUniform, 1, glm::value_ptr(diffuseColor));
 	glUniform3fv(specColorUniform, 1, glm::value_ptr(specColor));
 	glUniform3fv(lightDirUniform, 1, glm::value_ptr(glm::normalize(glm::vec3(sinf(glfwGetTime() * 0.1f), m_lightHeight, cosf(glfwGetTime() * 0.1f) + 1))));
 	glUniform3fv(cameraPosUniform, 1, glm::value_ptr(_camera->GetPosition()));
-
+	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 
 	glBindVertexArray(m_VAO);

@@ -5,8 +5,10 @@ in vec2 TexCoords;
 in float Time;
 
 out vec4 fragColour;
+uniform sampler2D startTexture;
+uniform sampler2D endTexture;
 
 void main()
 {
-	fragColour = Colour;
+	fragColour = mix(texture(startTexture, TexCoords), texture(endTexture, TexCoords), Time);
 }

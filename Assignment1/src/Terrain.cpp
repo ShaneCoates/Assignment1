@@ -9,7 +9,6 @@
 #include "ShaderLoader.h"
 #include "Camera.h"
 Terrain::Terrain() {
-	m_zValue = 0;
 	m_octaves = 10;
 	m_amplitude = 1.0f;
 	m_persistence = 0.3f;
@@ -64,9 +63,6 @@ void Terrain::Draw(Camera* _camera) {
 	}
 	loc = glGetUniformLocation(m_program, "time");
 	glUniform1f(loc, (float)glfwGetTime());
-
-	loc = glGetUniformLocation(m_program, "zValue");
-	glUniform1f(loc, (float)(m_zValue * 0.01f));
 
 	loc = glGetUniformLocation(m_program, "amplitude");
 	glUniform1f(loc, (float)(m_amplitude));
