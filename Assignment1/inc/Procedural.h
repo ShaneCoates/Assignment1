@@ -61,7 +61,9 @@ private:
 	unsigned int m_seedCount;
 	ImVector<int> m_seeds;
 
-	ParticleEmitter* m_emitter;
+	ParticleEmitter* m_starsEmitter;
+	ParticleEmitter* m_ringEmitter;
+
 
 	bool m_freeCam;
 };

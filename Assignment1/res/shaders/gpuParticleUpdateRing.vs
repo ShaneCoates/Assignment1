@@ -34,7 +34,11 @@ void main()
 {
 	uint seed = uint(time * 1000.0) + uint(gl_VertexID);
 
-	position = Position + Velocity * deltaTime;	
+	//position = Position + Velocity * deltaTime;	
+	position = emitterPosition;
+	position.x += sin(time * Lifetime / Lifespan) * (rand(seed++, 2) + 30);
+	position.y += sin(time * Lifetime / Lifespan) * (rand(seed++, 2) + 15);
+	position.z += cos(time * Lifetime / Lifespan) * (rand(seed++, 2) + 30);
 	velocity = Velocity;
 	lifetime = Lifetime + deltaTime;
 	lifespan = Lifespan;
@@ -47,10 +51,9 @@ void main()
 
 		position = emitterPosition;
 
-		position.x += rand(seed++, 400) - 200;
-		position.z += rand(seed++, 400) - 200;
-		position.y += rand(seed++, 400) - 200;
+		float pos = rand(seed++, 1);
 
+		
 		lifetime = 0;
 		lifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;// - position.y - velocity.y;
 	}

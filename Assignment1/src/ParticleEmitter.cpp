@@ -29,11 +29,15 @@ void ParticleEmitter::Init(unsigned int _maxParticles, float _minLifeSpan, float
 	m_endColour = _endColour;
 	m_particles = new Particle[_maxParticles];
 	m_activeBuffer = 0;
+	m_emitterPosition = glm::vec3(0, 0, 0);
 	CreateBuffers();
 	CreateUpdateShader("res/shaders/gpuParticleUpdate.vs");
 	CreateDrawShader();
 }
 void ParticleEmitter::Draw(float _time, Camera* _camera) {
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glUseProgram(m_updateShader);
 	int loc = glGetUniformLocation(m_updateShader, "time");
 	glUniform1f(loc, _time);
@@ -42,7 +46,7 @@ void ParticleEmitter::Draw(float _time, Camera* _camera) {
 	loc = glGetUniformLocation(m_updateShader, "deltaTime");
 	glUniform1f(loc, deltaTime);
 	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
-	glUniform3fv(loc, 1, glm::value_ptr(glm::vec3(0, 0, 0)));
+	glUniform3fv(loc, 1, glm::value_ptr(m_emitterPosition));
 	glEnable(GL_RASTERIZER_DISCARD);
 	glBindVertexArray(m_vao[m_activeBuffer]);
 	unsigned int otherBuffer = (m_activeBuffer + 1) % 2;
@@ -70,6 +74,8 @@ void ParticleEmitter::Draw(float _time, Camera* _camera) {
 	glBindVertexArray(m_vao[otherBuffer]);
 	glDrawArrays(GL_POINTS, 0, m_maxParticles);
 	m_activeBuffer = otherBuffer;
+	glDisable(GL_BLEND);
+
 }
 void ParticleEmitter::CreateBuffers() {
 	glGenVertexArrays(2, m_vao);
@@ -135,7 +141,7 @@ void ParticleEmitter::CreateDrawShader() {
 }
 void ParticleEmitter::CreateUpdateShader(const char* _path) {
 	unsigned int vs = ShaderLoader::LoadShader(_path, GL_VERTEX_SHADER);
-	unsigned int vs = ShaderLoader::LoadShader("res/shaders/gpuParticleUpdate.vs", GL_VERTEX_SHADER);
+	//unsigned int vs = ShaderLoader::LoadShader("res/shaders/gpuParticleUpdate.vs", GL_VERTEX_SHADER);
 	m_updateShader = glCreateProgram();
 	glAttachShader(m_updateShader, vs);
 	const char* varyings[] = { "position", "velocity", "lifetime", "lifespan" };

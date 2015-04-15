@@ -34,6 +34,9 @@ public:
 	void LoadTexture(const char* _path[2]);
 	void CreateUpdateShader(const char* _path);
 	void CreateDrawShader();
+
+	glm::vec3 m_emitterPosition;
+
 protected:
 
 	void CreateBuffers();
@@ -66,6 +69,8 @@ protected:
 	unsigned int m_updateShader;
 
 	float m_lastDrawTime;
+
+	
 
 private:
 };

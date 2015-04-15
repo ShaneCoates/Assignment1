@@ -27,12 +27,18 @@ void Procedural::Init(GLFWwindow* _window, GameStateManager* _gameStateManager) 
 	m_terrain->NewSeed();
 	m_seedCount = 0;
 	m_seeds.push_back(m_terrain->m_seed);
-	m_emitter = new ParticleEmitter();
-	m_emitter->Init(50000, 50.0f, 100.0f, 1.0f, 5.0f, 0.1f, 0.15f, glm::vec4(1.0f, 1.0f, 1.0f, 0.75f), glm::vec4(1.0f, 1.0f, 1.0f, 0.25f));
+	m_ringEmitter = new ParticleEmitter();
+	m_ringEmitter->Init(50000, 50.0f, 100.0f, 1.0f, 5.0f, 0.1f, 0.15f, glm::vec4(0.3f, 0.3f, 0.5f, 0.75f), glm::vec4(0.5f, 0.5f, 0.3f, 0.25f));
+	m_ringEmitter->CreateUpdateShader("res/shaders/gpuParticleUpdateRing.vs");
+	m_ringEmitter->m_emitterPosition = glm::vec3(10, 60, 120);
 	const char* path[2];
 	path[0] = "res/textures/circle.png";
 	path[1] = "res/textures/star.png";
-	m_emitter->LoadTexture(path);
+	m_ringEmitter->LoadTexture(path);
+	m_starsEmitter = new ParticleEmitter();
+	m_starsEmitter->Init(50000, 50.0f, 100.0f, 1.0f, 5.0f, 0.1f, 0.15f, glm::vec4(1.0f, 1.0f, 1.0f, 0.75f), glm::vec4(1.0f, 1.0f, 1.0f, 0.25f));
+	m_starsEmitter->CreateUpdateShader("res/shaders/gpuParticleUpdate.vs");
+	m_starsEmitter->LoadTexture(path);
 	unsigned int m_program = ShaderLoader::LoadProgram("res/shaders/simpleOBJ.vs", "res/shaders/simpleOBJ.fs");
 	m_planet1 = new ObjectOBJ("res/models/AlienPlanet.obj", m_program);
 	m_planet1->Translate(glm::vec3(10, 50, 120));
@@ -52,8 +58,11 @@ void Procedural::Update(double _dt) {
 	m_activeCamera->Update(_dt);
 	if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS) {
 		m_terrain->ReloadShaders();
-		m_emitter->CreateDrawShader();
-		m_emitter->CreateUpdateShader("res/shaders/gpuParticleUpdate.vs");
+		m_ringEmitter->CreateDrawShader();
+		m_ringEmitter->CreateUpdateShader("res/shaders/gpuParticleUpdateRing.vs");
+		m_starsEmitter->CreateDrawShader();
+		m_starsEmitter->CreateUpdateShader("res/shaders/gpuParticleUpdate.vs");
+
 	}
 	GUI();
 	m_planet1->m_lightHeight = m_terrain->m_lightHeight;
@@ -63,7 +72,8 @@ void Procedural::Update(double _dt) {
 }
 void Procedural::Draw() {
 	m_skybox->Draw(m_activeCamera);
-	m_emitter->Draw((float)glfwGetTime(), m_activeCamera);
+	m_ringEmitter->Draw((float)glfwGetTime(), m_activeCamera);
+	m_starsEmitter->Draw((float)glfwGetTime(), m_activeCamera);
 	m_planet1->Draw(m_activeCamera);
 	m_planet2->Draw(m_activeCamera);
 	m_terrain->Draw(m_activeCamera);
