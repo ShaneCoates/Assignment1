@@ -186,7 +186,7 @@ void ObjectOBJ::LoadFromObj(const char* _path)
 	}
 	seen.resize(m_vertexCount, 0);
 	if (!Normals) {
-		for (int i = 0; i < m_indexCount; i += 3) {
+		for (unsigned int i = 0; i < m_indexCount; i += 3) {
 			GLushort ia = auiIndicies[i];
 			GLushort ib = auiIndicies[i+1];
 			GLushort ic = auiIndicies[i+2];
