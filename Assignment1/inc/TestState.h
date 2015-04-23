@@ -12,7 +12,6 @@ class FlyCamera;
 class FollowCamera;
 class ObjectOBJ;
 class ParticleEmitter;
-class SoundManager;
 class DebugGUI;
 class Fire;
 class RenderTarget;
@@ -43,16 +42,9 @@ private:
 	FlyCamera* m_camera;
 	double m_timeLeft;
 
-	ParticleEmitter* m_emitter;
-
-	SoundManager* m_soundManager;
-
 	DebugGUI* m_debugGUI;
 
 	Fire* m_fire;
-	RenderTarget* m_renderTarget;
-	Skybox* m_skybox;
-	ObjectOBJ* m_object;
 };
 
 #endif
