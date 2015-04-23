@@ -28,6 +28,8 @@ void ParticleEmitter::Init(unsigned int _maxParticles, float _minLifeSpan, float
 	m_startColour = _startColour;
 	m_endColour = _endColour;
 	m_particles = new Particle[_maxParticles];
+	m_spread = 1.0f;
+	m_emitterType = eSphere;
 	m_activeBuffer = 0;
 	CreateBuffers();
 	CreateUpdateShader();
@@ -35,14 +37,26 @@ void ParticleEmitter::Init(unsigned int _maxParticles, float _minLifeSpan, float
 }
 void ParticleEmitter::Draw(float _time, Camera* _camera) {
 	glUseProgram(m_updateShader);
-	int loc = glGetUniformLocation(m_updateShader, "time");
+	int loc = glGetUniformLocation(m_updateShader, "spread");
+	glUniform1f(loc, m_spread);
+	loc = glGetUniformLocation(m_updateShader, "lifeMin");
+	glUniform1f(loc, m_minLifeSpan);
+	loc = glGetUniformLocation(m_updateShader, "lifeMax");
+	glUniform1f(loc, m_maxLifeSpan);
+	loc = glGetUniformLocation(m_updateShader, "velocityMin");
+	glUniform1f(loc, m_minVelocity);
+	loc = glGetUniformLocation(m_updateShader, "velocityMax");
+	glUniform1f(loc, m_maxVelocity);
+	loc = glGetUniformLocation(m_updateShader, "emitterType");
+	glUniform1i(loc, m_emitterType);
+	loc = glGetUniformLocation(m_updateShader, "time");
 	glUniform1f(loc, _time);
 	float deltaTime = _time - m_lastDrawTime;
 	m_lastDrawTime = _time;
 	loc = glGetUniformLocation(m_updateShader, "deltaTime");
 	glUniform1f(loc, deltaTime);
 	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
-	glUniform3fv(loc, 1, glm::value_ptr(_camera->GetPosition()));
+	glUniform3fv(loc, 1, glm::value_ptr(glm::vec3(0, 0, 0)));
 	glEnable(GL_RASTERIZER_DISCARD);
 	glBindVertexArray(m_vao[m_activeBuffer]);
 	unsigned int otherBuffer = (m_activeBuffer + 1) % 2;
@@ -122,9 +136,17 @@ void ParticleEmitter::CreateDrawShader() {
 	glUniform4fv(loc, 1, &m_startColour[0]);
 	loc = glGetUniformLocation(m_drawShader, "colourEnd");
 	glUniform4fv(loc, 1, &m_endColour[0]);
+	loc = glGetUniformLocation(m_drawShader, "textureStart");
+	glUniform1i(loc, 3);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
+	loc = glGetUniformLocation(m_drawShader, "textureEnd");
+	glUniform1i(loc, 4);
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
 }
 void ParticleEmitter::CreateUpdateShader() {
-	unsigned int vs = ShaderLoader::LoadShader("res/shaders/gpuParticleUpdate.vs", GL_VERTEX_SHADER);
+	unsigned int vs = ShaderLoader::LoadShader("res/shaders/gpuParticleUpdateFire.vs", GL_VERTEX_SHADER);
 	m_updateShader = glCreateProgram();
 	glAttachShader(m_updateShader, vs);
 	const char* varyings[] = { "position", "velocity", "lifetime", "lifespan" };

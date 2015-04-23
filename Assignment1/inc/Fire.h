@@ -19,6 +19,9 @@ public:
 
 	unsigned int m_fboTexture[2];
 
+	void ReloadShaders();
+
+	ParticleEmitter* m_emitter;
 
 protected:
 private:
@@ -31,7 +34,6 @@ private:
 	unsigned int m_fboDepth;
 	unsigned int m_program[2];
 
-	ParticleEmitter* m_emitter;
 	Camera* m_camera;
 };
 

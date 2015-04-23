@@ -6,6 +6,12 @@
 #define _PARTICLE_EMITTER_H_
 #include <glm.hpp>
 class Camera;
+enum emitterType {
+	eCircle = 1,
+	eSphere = 2,
+	eSquare = 3,
+	eCube = 4
+};
 struct Particle
 {
 	Particle() : lifetime(1), lifespan(0) {}
@@ -34,6 +40,16 @@ public:
 	void LoadTexture(const char* _path[2]);
 	void CreateUpdateShader();
 	void CreateDrawShader();
+
+	float m_spread;
+	float m_minLifeSpan;
+	float m_maxLifeSpan;
+
+	float m_minVelocity;
+	float m_maxVelocity;
+
+	emitterType m_emitterType;
+
 protected:
 
 	void CreateBuffers();
@@ -46,11 +62,7 @@ protected:
 
 	glm::vec3 m_position;
 
-	float m_minLifeSpan;
-	float m_maxLifeSpan;
-
-	float m_minVelocity;
-	float m_maxVelocity;
+	
 
 	float m_startSize;
 	float m_endSize;

@@ -19,6 +19,10 @@ uniform float velocityMax;
 
 uniform vec3 emitterPosition;
 
+uniform float spread;
+
+uniform int emitterType;
+
 const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 float rand(uint seed, float range)
 {
@@ -37,9 +41,10 @@ void main()
 	velocity = Velocity;
 	
 	vec3 targetPosition = emitterPosition;
-	targetPosition.x += tan(time);
-	targetPosition.z += cos(time);
-
+	if(emitterType != 0) {
+		targetPosition.x += (tan(time) * spread);
+		targetPosition.z += (cos(time) * spread);
+	}
 
 	if(position.x > targetPosition.x + 0.1f)
 		velocity.x -= deltaTime;
@@ -68,16 +73,32 @@ void main()
 
 		position = emitterPosition;
 
-		float theta = 2 * 3.14 * rand(seed++, 1);
-		float phi = 3.14 * rand(seed++, 1);
+		if(emitterType == 1) {
+			float theta = 2 * 3.14 * rand(seed++, 1);
+			float phi = 3.14 * rand(seed++, 1);
 
-		position.x = cos(theta) * sin(phi);
-		//position.y = sin(theta) * sin(phi);
-		position.z = cos(phi);
-		//position.x += rand(seed++, 1) - 0.5f;
-		//position.z += rand(seed++, 1) - 0.5f;
+			position.x = cos(theta) * sin(phi) * spread;
+			position.z = cos(phi) * spread;
+		} else if(emitterType == 2) {
+			float theta = 2 * 3.14 * rand(seed++, 1);
+			float phi = 3.14 * rand(seed++, 1);
+			
+			position.x = cos(theta) * sin(phi) * spread;
+			position.y = sin(theta) * sin(phi) * spread;
+			position.z = cos(phi) * spread;
+		} else if(emitterType == 3) {
+			position.x += (rand(seed++, 1) - 0.5f) * spread;
+			position.z += (rand(seed++, 1) - 0.5f) * spread;
+		} else if(emitterType == 4) {
+			position.x += (rand(seed++, 1) - 0.5f) * spread;
+			position.y += (rand(seed++, 1) - 0.5f) * spread;
+			position.z += (rand(seed++, 1) - 0.5f) * spread;
+		}
+		//Sphere
+		//
+		//
 
 		lifetime = 0;
-		lifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;// - position.y - velocity.y;
+		lifespan = (rand(seed++, lifeMax - lifeMin) + lifeMin);
 	}
 }

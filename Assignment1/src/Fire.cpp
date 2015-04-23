@@ -9,11 +9,11 @@
 Fire::Fire() {
 	Init();
 	m_emitter = new ParticleEmitter();
-	m_emitter->Init(50000, 1.0f, 2.0f, 1.0f, 5.0f, 0.1f, 0.15f, glm::vec4(1.0f, 1.0f, 1.0f, 0.75f), glm::vec4(1.0f, 1.0f, 1.0f, 0.25f));
 	const char* path[2];
 	path[0] = "res/textures/fire.png";
 	path[1] = "res/textures/smoke.png";
 	m_emitter->LoadTexture(path);
+	m_emitter->Init(100000, 1.0f, 2.0f, 1.0f, 5.0f, 0.1f, 0.15f, glm::vec4(1.0f, 1.0f, 1.0f, 0.75f), glm::vec4(0.2f, 0.2f, 0.2f, 0.25f));
 }
 Fire::~Fire() {
 
@@ -105,4 +105,9 @@ void Fire::DrawToTexture(unsigned int _index) {
 	glUniform1i(glGetUniformLocation(m_program[_index], "diffuse"), 0);
 	glBindVertexArray(m_vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
+void Fire::ReloadShaders() {
+	m_emitter->CreateDrawShader();
+	m_emitter->CreateUpdateShader();
 }

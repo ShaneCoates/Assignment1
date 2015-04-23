@@ -22,7 +22,8 @@ uniform vec4 colourEnd;
 
 void main()
 {
-	Time = (lifetime[0] / lifespan[0]) * 0.85f;
+	Time = (lifetime[0] / lifespan[0] * 0.55f);
+
 	Colour = mix(colourStart, colourEnd, lifetime[0] / lifespan[0]);
 
 	float halfSize = mix(sizeStart, sizeEnd, lifetime[0] / lifespan [0]) * 0.5f;
